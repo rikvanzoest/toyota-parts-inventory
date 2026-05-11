@@ -309,7 +309,7 @@ function App() {
                           {part.condition}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${part.price.toFixed(2)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${part.price}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{part.quantity}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button
