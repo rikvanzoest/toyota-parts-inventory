@@ -30,7 +30,7 @@ function App() {
   })
 
   // Admin password (in production, use environment variable)
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'
+  const ADMIN_PASSWORD = 'admin123'
 
   // Used car part categories (no fluids)
   const categories = [
@@ -55,25 +55,48 @@ const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'
     'For Parts Only'
   ]
 
-  // Common Toyota models
+  // Common Toyota, Lexus, and Scion models
   const toyotaModels = [
+    // Toyota
+    '4Runner',
+    'Avalon',
     'Camry',
+    'C-HR',
     'Corolla',
-    'RAV4',
+    'GR86',
     'Highlander',
+    'Land Cruiser',
+    'Prius',
+    'RAV4',
+    'Sequoia',
+    'Sienna',
+    'Supra',
     'Tacoma',
     'Tundra',
-    '4Runner',
-    'Prius',
-    'Sienna',
-    'Avalon',
-    'Sequoia',
-    'Land Cruiser',
-    'C-HR',
-    'Yaris',
     'Venza',
-    'GR86',
-    'Supra'
+    'Yaris',
+    // Lexus
+    'CT',
+    'ES',
+    'GS',
+    'GX',
+    'IS',
+    'LC',
+    'LS',
+    'LX',
+    'NX',
+    'RC',
+    'RX',
+    'UX',
+    // Scion
+    'FR-S',
+    'iA',
+    'iM',
+    'iQ',
+    'tC',
+    'xA',
+    'xB',
+    'xD'
   ]
 
   useEffect(() => {
@@ -276,7 +299,7 @@ const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'
             <div className="flex items-center space-x-3">
               <Car className="w-8 h-8" />
               <div>
-                <h1 className="text-3xl font-bold">Toyota Used Parts Inventory</h1>
+                <h1 className="text-3xl font-bold">Toyota / Lexus / Scion Used Parts</h1>
                 <p className="text-red-100 text-sm">Salvage & Recycled Auto Parts</p>
               </div>
             </div>
@@ -565,14 +588,17 @@ const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Make</label>
-                      <input
-                        type="text"
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Make *</label>
+                      <select
+                        required
                         value={formData.vehicle_make}
                         onChange={(e) => setFormData({ ...formData, vehicle_make: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-gray-50"
-                        placeholder="Toyota"
-                      />
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      >
+                        <option value="Toyota">Toyota</option>
+                        <option value="Lexus">Lexus</option>
+                        <option value="Scion">Scion</option>
+                      </select>
                     </div>
                   </div>
 
