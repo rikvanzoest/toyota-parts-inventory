@@ -25,6 +25,10 @@ CREATE TABLE IF NOT EXISTS toyota_parts (
   price VARCHAR(20) NOT NULL,
   quantity INTEGER NOT NULL DEFAULT 1,
   
+  -- Photos (stores URLs or base64 strings, max 2 photos)
+  photo_1 TEXT,
+  photo_2 TEXT,
+  
   -- Timestamps
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
