@@ -55,48 +55,50 @@ function App() {
     'For Parts Only'
   ]
 
-  // Common Toyota, Lexus, and Scion models
+  // Toyota, Lexus, and Scion models (focus on 1980-2000 era)
   const toyotaModels = [
     // Toyota
     '4Runner',
     'Avalon',
     'Camry',
-    'C-HR',
+    'Celica',
     'Corolla',
-    'GR86',
+    'Cressida',
+    'Echo',
+    'GR86/86',
     'Highlander',
     'Land Cruiser',
-    'Prius',
+    'MR2',
+    'Paseo',
+    'Pickup',
+    'Previa',
     'RAV4',
     'Sequoia',
     'Sienna',
+    'Solara',
     'Supra',
+    'T100',
     'Tacoma',
+    'Tercel',
     'Tundra',
-    'Venza',
-    'Yaris',
     // Lexus
-    'CT',
-    'ES',
-    'GS',
-    'GX',
-    'IS',
-    'LC',
-    'LS',
-    'LX',
-    'NX',
-    'RC',
-    'RX',
-    'UX',
+    'ES300',
+    'ES330',
+    'GS300',
+    'GS400',
+    'GX470',
+    'IS300',
+    'LS400',
+    'LS430',
+    'LX450',
+    'LX470',
+    'RX300',
+    'RX330',
+    'SC300',
+    'SC400',
     // Scion
     'FR-S',
-    'iA',
-    'iM',
-    'iQ',
-    'tC',
-    'xA',
-    'xB',
-    'xD'
+    'tC'
   ]
 
   useEffect(() => {
@@ -578,12 +580,12 @@ function App() {
                       <input
                         type="number"
                         required
-                        min="1990"
+                        min="1980"
                         max={new Date().getFullYear() + 1}
                         value={formData.vehicle_year}
                         onChange={(e) => setFormData({ ...formData, vehicle_year: e.target.value })}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                        placeholder="2020"
+                        placeholder="1995"
                       />
                     </div>
                     
