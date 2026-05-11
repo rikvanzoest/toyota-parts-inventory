@@ -30,7 +30,7 @@ function App() {
   })
 
   // Admin password (in production, use environment variable)
-  const ADMIN_PASSWORD = 'admin123'
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'
 
   // Used car part categories (no fluids)
   const categories = [
