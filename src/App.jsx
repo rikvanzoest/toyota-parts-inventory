@@ -13,6 +13,14 @@ function App() {
   const [showLogin, setShowLogin] = useState(false)
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
+  const [bulkMode, setBulkMode] = useState(false)
+  const [bulkParts, setBulkParts] = useState([])
+  const [bulkVehicleInfo, setBulkVehicleInfo] = useState({
+    vehicle_year: '',
+    vehicle_make: 'Toyota',
+    vehicle_model: '',
+    vehicle_trim: ''
+  })
   const [formData, setFormData] = useState({
     part_name: '',
     category: '',
@@ -211,6 +219,85 @@ function App() {
     }
   }
 
+  function addPartToBulkList(e) {
+    e.preventDefault()
+    
+    const newPart = {
+      id: Date.now(), // temporary ID for the list
+      part_name: formData.part_name,
+      category: formData.category,
+      condition: formData.condition,
+      condition_notes: formData.condition_notes,
+      price: formData.price_is_call ? 'Call' : formData.price,
+      price_is_call: formData.price_is_call,
+      quantity: parseInt(formData.quantity),
+      photo_1: formData.photo_1 || null,
+      photo_2: formData.photo_2 || null
+    }
+
+    setBulkParts([...bulkParts, newPart])
+    
+    // Reset only the part-specific fields, keep vehicle info
+    setFormData({
+      ...formData,
+      part_name: '',
+      category: '',
+      condition: '',
+      condition_notes: '',
+      price: '',
+      price_is_call: false,
+      quantity: '1',
+      photo_1: '',
+      photo_2: ''
+    })
+  }
+
+  function removePartFromBulkList(id) {
+    setBulkParts(bulkParts.filter(part => part.id !== id))
+  }
+
+  async function submitBulkParts() {
+    if (bulkParts.length === 0) {
+      alert('Please add at least one part to the list')
+      return
+    }
+
+    if (!bulkVehicleInfo.vehicle_year || !bulkVehicleInfo.vehicle_model) {
+      alert('Please fill in vehicle year and model')
+      return
+    }
+
+    try {
+      const partsToInsert = bulkParts.map(part => ({
+        part_name: part.part_name,
+        category: part.category,
+        vehicle_year: parseInt(bulkVehicleInfo.vehicle_year),
+        vehicle_make: bulkVehicleInfo.vehicle_make,
+        vehicle_model: bulkVehicleInfo.vehicle_model,
+        vehicle_trim: bulkVehicleInfo.vehicle_trim,
+        condition: part.condition,
+        condition_notes: part.condition_notes,
+        price: part.price,
+        quantity: part.quantity,
+        photo_1: part.photo_1,
+        photo_2: part.photo_2
+      }))
+
+      const { error } = await supabase
+        .from('toyota_parts')
+        .insert(partsToInsert)
+      
+      if (error) throw error
+
+      alert(`Successfully added ${bulkParts.length} parts!`)
+      resetForm()
+      fetchParts()
+    } catch (error) {
+      console.error('Error saving bulk parts:', error.message)
+      alert('Error saving parts: ' + error.message)
+    }
+  }
+
   async function handleDelete(id) {
     if (!confirm('Are you sure you want to delete this part?')) return
 
@@ -245,6 +332,14 @@ function App() {
     })
     setEditingPart(null)
     setShowAddModal(false)
+    setBulkMode(false)
+    setBulkParts([])
+    setBulkVehicleInfo({
+      vehicle_year: '',
+      vehicle_make: 'Toyota',
+      vehicle_model: '',
+      vehicle_trim: ''
+    })
   }
 
   function handleEdit(part) {
@@ -301,11 +396,20 @@ function App() {
             <div className="flex items-center space-x-3">
               <Car className="w-8 h-8" />
               <div>
-                <h1 className="text-3xl font-bold">Toyota / Lexus / Scion Used Parts</h1>
-                <p className="text-red-100 text-sm">Salvage & Recycled Auto Parts</p>
+                <h1 className="text-3xl font-bold">2wist'd Garage</h1>
+                <p className="text-red-100 text-sm">Toyota, Lexus & Scion Parts</p>
+                <p className="text-red-100 text-xs mt-1">📍 Rogersville, TN</p>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-6">
+              <div className="text-right text-sm hidden md:block">
+                <p className="font-semibold">Contact Us</p>
+                <a href="mailto:parts@2wistdgarage.com" className="text-red-100 hover:text-white transition">
+                  parts@2wistdgarage.com
+                </a>
+                <p className="text-red-100 text-xs mt-2">📦 Small parts shipping available (buyer's expense)</p>
+                <p className="text-red-100 text-xs">💳 Cash or PayPal accepted</p>
+              </div>
               {isAdmin ? (
                 <>
                   <button
@@ -541,9 +645,35 @@ function App() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
-              <h2 className="text-2xl font-bold mb-6">{editingPart ? 'Edit Part' : 'Add New Part'}</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">{editingPart ? 'Edit Part' : bulkMode ? 'Add Multiple Parts (Bulk Mode)' : 'Add New Part'}</h2>
+                {!editingPart && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBulkMode(!bulkMode)
+                      if (!bulkMode) {
+                        // Entering bulk mode - save current vehicle info
+                        setBulkVehicleInfo({
+                          vehicle_year: formData.vehicle_year,
+                          vehicle_make: formData.vehicle_make,
+                          vehicle_model: formData.vehicle_model,
+                          vehicle_trim: formData.vehicle_trim
+                        })
+                      }
+                    }}
+                    className={`px-4 py-2 rounded-lg font-semibold transition ${
+                      bulkMode 
+                        ? 'bg-red-600 text-white hover:bg-red-700' 
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {bulkMode ? '✓ Bulk Mode ON' : 'Bulk Mode OFF'}
+                  </button>
+                )}
+              </div>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={bulkMode ? addPartToBulkList : handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Part Name *</label>
                   <input
@@ -572,7 +702,10 @@ function App() {
                 </div>
 
                 <div className="border-t pt-4">
-                  <h3 className="text-lg font-semibold mb-3">Source Vehicle Information</h3>
+                  <h3 className="text-lg font-semibold mb-3">
+                    Source Vehicle Information
+                    {bulkMode && <span className="text-sm text-red-600 ml-2">(Shared for all parts)</span>}
+                  </h3>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -582,8 +715,14 @@ function App() {
                         required
                         min="1980"
                         max={new Date().getFullYear() + 1}
-                        value={formData.vehicle_year}
-                        onChange={(e) => setFormData({ ...formData, vehicle_year: e.target.value })}
+                        value={bulkMode ? bulkVehicleInfo.vehicle_year : formData.vehicle_year}
+                        onChange={(e) => {
+                          if (bulkMode) {
+                            setBulkVehicleInfo({ ...bulkVehicleInfo, vehicle_year: e.target.value })
+                          } else {
+                            setFormData({ ...formData, vehicle_year: e.target.value })
+                          }
+                        }}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                         placeholder="1995"
                       />
@@ -593,8 +732,14 @@ function App() {
                       <label className="block text-sm font-medium text-gray-700 mb-1">Make *</label>
                       <select
                         required
-                        value={formData.vehicle_make}
-                        onChange={(e) => setFormData({ ...formData, vehicle_make: e.target.value })}
+                        value={bulkMode ? bulkVehicleInfo.vehicle_make : formData.vehicle_make}
+                        onChange={(e) => {
+                          if (bulkMode) {
+                            setBulkVehicleInfo({ ...bulkVehicleInfo, vehicle_make: e.target.value })
+                          } else {
+                            setFormData({ ...formData, vehicle_make: e.target.value })
+                          }
+                        }}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                       >
                         <option value="Toyota">Toyota</option>
@@ -609,8 +754,14 @@ function App() {
                       <label className="block text-sm font-medium text-gray-700 mb-1">Model *</label>
                       <select
                         required
-                        value={formData.vehicle_model}
-                        onChange={(e) => setFormData({ ...formData, vehicle_model: e.target.value })}
+                        value={bulkMode ? bulkVehicleInfo.vehicle_model : formData.vehicle_model}
+                        onChange={(e) => {
+                          if (bulkMode) {
+                            setBulkVehicleInfo({ ...bulkVehicleInfo, vehicle_model: e.target.value })
+                          } else {
+                            setFormData({ ...formData, vehicle_model: e.target.value })
+                          }
+                        }}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                       >
                         <option value="">Select model</option>
@@ -624,8 +775,14 @@ function App() {
                       <label className="block text-sm font-medium text-gray-700 mb-1">Trim</label>
                       <input
                         type="text"
-                        value={formData.vehicle_trim}
-                        onChange={(e) => setFormData({ ...formData, vehicle_trim: e.target.value })}
+                        value={bulkMode ? bulkVehicleInfo.vehicle_trim : formData.vehicle_trim}
+                        onChange={(e) => {
+                          if (bulkMode) {
+                            setBulkVehicleInfo({ ...bulkVehicleInfo, vehicle_trim: e.target.value })
+                          } else {
+                            setFormData({ ...formData, vehicle_trim: e.target.value })
+                          }
+                        }}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                         placeholder="e.g., LE, SE, XLE, Limited"
                       />
@@ -782,6 +939,32 @@ function App() {
                   </div>
                 </div>
 
+                {/* Bulk Parts List */}
+                {bulkMode && bulkParts.length > 0 && (
+                  <div className="border-t pt-4">
+                    <h3 className="text-lg font-semibold mb-3">Parts to Add ({bulkParts.length})</h3>
+                    <div className="space-y-2 max-h-60 overflow-y-auto">
+                      {bulkParts.map((part) => (
+                        <div key={part.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                          <div className="flex-1">
+                            <p className="font-medium">{part.part_name}</p>
+                            <p className="text-sm text-gray-600">
+                              {part.category} · {part.condition} · {part.price === 'Call' ? 'Call' : `$${part.price}`} · Qty: {part.quantity}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removePartFromBulkList(part.id)}
+                            className="ml-3 text-red-600 hover:text-red-800 transition"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex justify-end space-x-3 pt-4">
                   <button
                     type="button"
@@ -790,11 +973,20 @@ function App() {
                   >
                     Cancel
                   </button>
+                  {bulkMode && bulkParts.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={submitBulkParts}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold"
+                    >
+                      Submit All {bulkParts.length} Parts
+                    </button>
+                  )}
                   <button
                     type="submit"
                     className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
                   >
-                    {editingPart ? 'Update Part' : 'Add Part'}
+                    {editingPart ? 'Update Part' : bulkMode ? 'Add to List' : 'Add Part'}
                   </button>
                 </div>
               </form>
