@@ -396,7 +396,7 @@ function App() {
             <div className="flex items-center space-x-3">
               <Car className="w-8 h-8" />
               <div>
-                <h1 className="text-3xl font-bold">2wist'd Garage</h1>
+                <h1 className="text-3xl font-bold">2WISTD GARAGE</h1>
                 <p className="text-red-100 text-sm">Toyota, Lexus & Scion Parts</p>
                 <p className="text-red-100 text-xs mt-1">📍 Rogersville, TN</p>
               </div>
