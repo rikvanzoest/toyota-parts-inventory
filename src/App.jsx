@@ -396,7 +396,7 @@ function App() {
             <div className="flex items-center space-x-3">
               <Car className="w-8 h-8" />
               <div>
-                <h1 className="text-3xl font-bold">2WISTD GARAGE</h1>
+                <h1 className="text-3xl font-bold">2wist'd Garage</h1>
                 <p className="text-red-100 text-sm">Toyota, Lexus & Scion Parts</p>
                 <p className="text-red-100 text-xs mt-1">📍 Rogersville, TN</p>
               </div>
@@ -430,10 +430,9 @@ function App() {
               ) : (
                 <button
                   onClick={() => setShowLogin(true)}
-                  className="bg-white text-red-600 px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 flex items-center space-x-2 transition"
+                  className="text-xs text-red-200 hover:text-white transition opacity-50 hover:opacity-100"
                 >
-                  <Lock className="w-5 h-5" />
-                  <span>Admin Login</span>
+                  •
                 </button>
               )}
             </div>
