@@ -30,6 +30,7 @@ function App() {
     vehicle_trim: '',
     condition: '',
     condition_notes: '',
+    color: '',
     price: '',
     price_is_call: false,
     quantity: '1',
@@ -190,7 +191,8 @@ function App() {
         vehicle_trim: formData.vehicle_trim,
         condition: formData.condition,
         condition_notes: formData.condition_notes,
-        price: formData.price_is_call ? 'Call' : formData.price,
+        color: formData.color || null,
+        price: formData.price_is_call ? 'Call or Email' : formData.price,
         quantity: parseInt(formData.quantity),
         photo_1: formData.photo_1 || null,
         photo_2: formData.photo_2 || null
@@ -228,7 +230,8 @@ function App() {
       category: formData.category,
       condition: formData.condition,
       condition_notes: formData.condition_notes,
-      price: formData.price_is_call ? 'Call' : formData.price,
+      color: formData.color || null,
+      price: formData.price_is_call ? 'Call or Email' : formData.price,
       price_is_call: formData.price_is_call,
       quantity: parseInt(formData.quantity),
       photo_1: formData.photo_1 || null,
@@ -244,6 +247,7 @@ function App() {
       category: '',
       condition: '',
       condition_notes: '',
+      color: '',
       price: '',
       price_is_call: false,
       quantity: '1',
@@ -277,6 +281,7 @@ function App() {
         vehicle_trim: bulkVehicleInfo.vehicle_trim,
         condition: part.condition,
         condition_notes: part.condition_notes,
+        color: part.color,
         price: part.price,
         quantity: part.quantity,
         photo_1: part.photo_1,
@@ -324,6 +329,7 @@ function App() {
       vehicle_trim: '',
       condition: '',
       condition_notes: '',
+      color: '',
       price: '',
       price_is_call: false,
       quantity: '1',
@@ -343,7 +349,7 @@ function App() {
   }
 
   function handleEdit(part) {
-    const priceIsCall = part.price === 'Call'
+    const priceIsCall = part.price === 'Call' || part.price === 'Call or Email'
     setFormData({
       part_name: part.part_name,
       category: part.category,
@@ -353,6 +359,7 @@ function App() {
       vehicle_trim: part.vehicle_trim || '',
       condition: part.condition,
       condition_notes: part.condition_notes || '',
+      color: part.color || '',
       price: priceIsCall ? '' : part.price,
       price_is_call: priceIsCall,
       quantity: part.quantity.toString(),
@@ -441,31 +448,36 @@ function App() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Cards */}
-        <div className={`grid grid-cols-1 ${isAdmin ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-6 mb-8`}>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-sm font-medium">Total Parts</p>
-                <p className="text-3xl font-bold text-gray-900">{parts.length}</p>
+        {/* Search and Stats */}
+        <div className="mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search by part name, category, model, or year..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* Total Parts Card */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-500 text-sm font-medium">Total Parts</p>
+                  <p className="text-3xl font-bold text-gray-900">{parts.length}</p>
+                </div>
+                <Package className="w-12 h-12 text-red-600" />
               </div>
-              <Package className="w-12 h-12 text-red-600" />
             </div>
           </div>
-          
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-500 text-sm font-medium">Excellent Condition</p>
-                <p className="text-3xl font-bold text-green-600">{excellentParts}</p>
-              </div>
-              <AlertCircle className="w-12 h-12 text-green-600" />
-            </div>
-          </div>
-          
+
           {/* Only show total value in admin mode */}
           {isAdmin && (
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6 mt-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-500 text-sm font-medium">Total Inventory Value</p>
@@ -475,20 +487,6 @@ function App() {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Search Bar */}
-        <div className="mb-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search by part name, category, model, or year..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-            />
-          </div>
         </div>
 
         {/* Parts Table */}
@@ -513,6 +511,7 @@ function App() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Condition</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
                     {isAdmin && (
@@ -560,6 +559,9 @@ function App() {
                         }`}>
                           {part.condition}
                         </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {part.color || 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                         {formatPrice(part.price)}
@@ -817,6 +819,17 @@ function App() {
                       placeholder="e.g., Minor scratches, no dents, tested and working perfectly..."
                     />
                   </div>
+
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                    <input
+                      type="text"
+                      value={formData.color}
+                      onChange={(e) => setFormData({ ...formData, color: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      placeholder="e.g., Red, Blue, Black, N/A"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 border-t pt-4">
@@ -831,7 +844,7 @@ function App() {
                           onChange={(e) => setFormData({ ...formData, price_is_call: e.target.checked, price: '' })}
                           className="w-4 h-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                         />
-                        <label htmlFor="price_is_call" className="text-sm text-gray-700">Call for Price</label>
+                        <label htmlFor="price_is_call" className="text-sm text-gray-700">Call or Email for Price</label>
                       </div>
                       {!formData.price_is_call && (
                         <input
