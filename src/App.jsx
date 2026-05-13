@@ -400,8 +400,12 @@ function App() {
       <header className="bg-red-600 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Car className="w-8 h-8" />
+            <div className="flex items-center space-x-4">
+              <img 
+                src="/2wistdgarage.png" 
+                alt="2WISTD Garage Logo" 
+                className="w-20 h-20 object-contain"
+              />
               <div>
                 <h1 className="text-3xl font-bold">2WISTD GARAGE</h1>
                 <p className="text-red-100 text-sm">Toyota, Lexus & Scion Parts</p>
