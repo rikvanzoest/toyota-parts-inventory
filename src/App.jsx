@@ -402,7 +402,7 @@ function App() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <img 
-                src="/2wistdgarage2.png" 
+                src="/2wistdgarage.png" 
                 alt="2WISTD Garage Logo" 
                 className="w-32 h-32 object-contain"
               />
