@@ -404,7 +404,7 @@ function App() {
               <img 
                 src="/2wistdgarage.png" 
                 alt="2WISTD Garage Logo" 
-                className="w-20 h-20 object-contain"
+                className="w-50 h-50 object-contain"
               />
               <div>
                 <h1 className="text-3xl font-bold">2WISTD GARAGE</h1>
