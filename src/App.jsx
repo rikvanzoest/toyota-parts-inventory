@@ -397,29 +397,29 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-red-600 text-white shadow-lg">
+      <header className="bg-white text-gray-900 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
               <img 
-                src="/2wistdgarage.png" 
+                src="/2wistdgarage2.png" 
                 alt="2WISTD Garage Logo" 
                 className="w-40 h-40 object-contain"
               />
               <div>
                 <h1 className="text-3xl font-bold">2WISTD GARAGE</h1>
-                <p className="text-red-100 text-sm">Toyota, Lexus & Scion Parts</p>
-                <p className="text-red-100 text-xs mt-1">📍 Rogersville, TN</p>
+                <p className="text-gray-600 text-sm">Toyota, Lexus & Scion Parts</p>
+                <p className="text-gray-600 text-xs mt-1">📍 Rogersville, TN</p>
               </div>
             </div>
             <div className="flex items-center space-x-6">
               <div className="text-right text-sm hidden md:block">
                 <p className="font-semibold">Contact Us</p>
-                <a href="mailto:parts@2wistdgarage.com" className="text-red-100 hover:text-white transition">
+                <a href="mailto:parts@2wistdgarage.com" className="text-red-600 hover:text-red-700 transition">
                   parts@2wistdgarage.com
                 </a>
-                <p className="text-red-100 text-xs mt-2">📦 Small parts shipping available (buyer's expense)</p>
-                <p className="text-red-100 text-xs">💳 Cash or PayPal accepted</p>
+                <p className="text-gray-600 text-xs mt-2">📦 Small parts shipping available (buyer's expense)</p>
+                <p className="text-gray-600 text-xs">💳 Cash or PayPal accepted</p>
               </div>
               {isAdmin ? (
                 <>
