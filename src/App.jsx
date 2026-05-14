@@ -398,13 +398,13 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-red-600 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               <img 
                 src="/2wistdgarage.png" 
                 alt="2WISTD Garage Logo" 
-                className="w-32 h-32 object-contain"
+                className="w-40 h-40 object-contain"
               />
               <div>
                 <h1 className="text-3xl font-bold">2WISTD GARAGE</h1>
