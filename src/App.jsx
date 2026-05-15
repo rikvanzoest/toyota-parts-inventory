@@ -404,7 +404,8 @@ function App() {
               <img 
                 src="/2wistdgarage2.png" 
                 alt="2WISTD Garage Logo" 
-                className="w-20 h-20 object-contain"
+                style={{ width: '300px', height: '300px' }}
+                className="object-contain"
               />
               <div>
                 <h1 className="text-3xl font-bold">2WISTD GARAGE</h1>
